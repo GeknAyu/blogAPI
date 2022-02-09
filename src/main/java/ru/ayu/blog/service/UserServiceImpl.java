@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.ayu.blog.converter.PostConverter;
 import ru.ayu.blog.domain.Post;
-import ru.ayu.blog.dao.PostDao;
+import ru.ayu.blog.dao.PostDaoImpl;
 import ru.ayu.blog.dto.PageDto;
 import ru.ayu.blog.dto.PostDto;
 import ru.ayu.blog.dto.SearchDto;
@@ -24,10 +24,10 @@ public class UserServiceImpl implements UserService {
     PostConverter converter;
 
     @Autowired
-    PostDao postDao;
+    PostDaoImpl postDaoImpl;
 
-    final Integer costPageNumber = 0;
-    final Integer costPageSize = 6;
+    private static final Integer costPageNumber = 0;
+    private static final Integer costPageSize = 6;
 
     public PageDto searchPages(SearchDto searchDto){
         Integer pageNumber = costPageNumber;
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         }
 
         Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        List<Post> post = postDao.findController(searchDto.getTags(),searchDto.getTitle(),pageable);
+        List<Post> post = postDaoImpl.findAll(searchDto.getTags(),searchDto.getTitle(),pageable);
         List<PostDto> postDto = converter.entityToDto(post);
         PageDto pageDto = new PageDto(searchDto, postDto);
 
